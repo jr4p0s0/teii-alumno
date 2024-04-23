@@ -14,7 +14,7 @@ def setup_logging(logging_level):
     # TODO
     #   Configura logging para enviar la salida a un archivo
 
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename='example.log')
     logger = logging.getLogger(__name__)
     logger.setLevel(logging_level)
     logger.info("Logger creado")
