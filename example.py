@@ -4,7 +4,7 @@
 import logging
 
 import matplotlib.pyplot as plt
-
+import pandas as pd
 import teii.finance as tf
 
 
@@ -18,7 +18,7 @@ def setup_logging(logging_level):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging_level)
     logger.info("Logger creado")
-    
+
     return logger
 
 
@@ -54,9 +54,10 @@ def main():
     else:
         # TODO
         #   Filtra los datos para mostrar únicamente el año 2023
-
+        desde = pd.Timestamp("2023-01-01")
+        hasta = pd.Timestamp("2023-12-31")
         # Genera una serie de Pandas con precio de cierre semanal
-        pd_series = tf_client.weekly_price()
+        pd_series = tf_client.weekly_price(from_date=desde, to_date=hasta)
 
         logger.info(pd_series)
 
