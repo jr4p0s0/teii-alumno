@@ -25,6 +25,8 @@ def mocked_requests():
             json_filename = 'TIME_SERIES_WEEKLY_ADJUSTED.IBM.json'
         elif 'AAPL' in url:
             json_filename = 'TIME_SERIES_WEEKLY_ADJUSTED.AAPL.json'
+        elif 'NODATA' in url:
+            json_filename = 'NODATA.json'
         else:
             raise ValueError('Ticker no soportado')
         with resources.open_text('teii.finance.data', json_filename) as json_file:
