@@ -15,6 +15,10 @@ def test_constructor_success(api_key_str,
     TimeSeriesFinanceClient("AAPL", api_key_str)
 
 
+def test_constructor_env(monkeypatch, mocked_requests):
+    monkeypatch.setenv("TEII_FINANCE_API_KEY", "monkeypatched_api_key")
+    TimeSeriesFinanceClient("IBM")
+
 
 def test_constructor_failure_invalid_api_key():
     with pytest.raises(FinanceClientInvalidAPIKey):
