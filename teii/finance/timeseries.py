@@ -39,9 +39,6 @@ class TimeSeriesFinanceClient(FinanceClient):
     def _build_data_frame(self) -> None:
         """ Build Panda's DataFrame and format data. """
 
-        # TODO
-        #   Comprueba que no se produce ningún error y genera excepción
-        #   'FinanceClientInvalidData' en caso contrario
         try:
             # Build Panda's data frame
             data_frame = pd.DataFrame.from_dict(self._json_data, orient='index', dtype='float')
