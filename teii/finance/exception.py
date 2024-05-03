@@ -40,3 +40,13 @@ class FinanceClientIOError(FinanceClientError):
     """
 
     pass
+
+# NOTE: This exception is not used in the current implementation. Is an error? Should be removed?
+
+
+class FinanceClientParamError(FinanceClientError):
+    """
+    Invalid finance client parameter.
+    """
+
+    pass
