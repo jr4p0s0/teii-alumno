@@ -7,7 +7,8 @@ from typing import Optional, Union
 
 import pandas as pd
 
-from teii.finance import FinanceClient, FinanceClientInvalidData
+from teii.finance import FinanceClient, FinanceClientInvalidData, FinanceClientParamError
+# NOTE: FinanceClientParamError is not used in the current implementation. Is an error? Should be removed?
 
 
 class TimeSeriesFinanceClient(FinanceClient):
@@ -114,9 +115,15 @@ class TimeSeriesFinanceClient(FinanceClient):
         # TODO
         #   Comprueba que from_date <= to_date y genera excepción
         #   'FinanceClientParamError' en caso de error
+        #  Comprobacion:
+        if from_date is not None and to_date is not None:
+            try:
+                assert from_date <= to_date
+            except Exception as e:
+                raise FinanceClientParamError("from_date > to_date") from e
 
         # FIXME: type hint error
-        if from_date is not None and to_date is not None:
+        if from_date is not None and to_date is not None:  # NOTE: Esto no deberia ser necesario, FIXME
             series = series.loc[from_date:to_date]   # type: ignore
 
         return series
