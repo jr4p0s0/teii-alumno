@@ -108,3 +108,37 @@ def test_constructor_invalid_data(api_key_str,
                                   mocked_requests):
     with pytest.raises(FinanceClientInvalidData):
         TimeSeriesFinanceClient("NODATA", api_key_str)
+
+
+def test_highest_weekly_variation_no_dates(api_key_str,
+                                           mocked_requests):
+    fc = TimeSeriesFinanceClient("IBM", api_key_str)
+
+    tuple_ = fc.highest_weekly_variation()
+
+    assert tuple_ == (dt.date.fromisoformat('2024-01-26'), 196.9, 172.4, 24.5)
+
+    pass
+
+
+def test_highest_weekly_variation_dates1(api_key_str,
+                                         mocked_requests):
+    fc = TimeSeriesFinanceClient("IBM", api_key_str)
+
+    tuple_ = fc.highest_weekly_variation(dt.date(year=2000, month=1, day=1),
+                                         dt.date(year=2010, month=12, day=31))
+
+    assert tuple_ == (dt.date.fromisoformat('2000-10-20'), 113.87, 90.25, 23.620000000000005)
+    pass
+
+
+def test_highest_weekly_variation_dates2(api_key_str,
+                                         mocked_requests):
+    fc = TimeSeriesFinanceClient("IBM", api_key_str)
+
+    tuple_ = fc.highest_weekly_variation(dt.date(year=2011, month=1, day=1),
+                                         dt.date(year=2023, month=12, day=31))
+
+    assert tuple_ == (dt.date.fromisoformat('2020-03-13'), 124.88, 100.81, 24.069999999999993)
+
+    pass

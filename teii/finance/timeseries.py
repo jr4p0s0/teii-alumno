@@ -127,3 +127,27 @@ class TimeSeriesFinanceClient(FinanceClient):
             series = series.loc[from_date:to_date]   # type: ignore
 
         return series
+
+    def highest_weekly_variation(self,
+                                 from_date: Optional[dt.date] = None,
+                                 to_date: Optional[dt.date] = None) -> tuple:
+        """ Return the week with the highest variation in the adjusted close price. """
+
+        assert self._data_frame is not None
+
+        # Filtramos el rango de fechas
+        if from_date is not None and to_date is not None:
+            self._data_frame = self._data_frame.loc[from_date:to_date]  # type: ignore
+
+        # Calculamos la variación de la cotización
+        self._data_frame['variation'] = self._data_frame['high'] - self._data_frame['low']
+
+        # Obtenemos la fecha con la mayor variación
+        max_variation = self._data_frame['variation'].idxmax()
+
+        # Obtenemos los valores de high y low para esa fecha
+        high = self._data_frame.loc[max_variation]['high']
+        low = self._data_frame.loc[max_variation]['low']
+
+        # Devolvemos la tupla
+        return (max_variation, high, low, high - low)
