@@ -7,7 +7,7 @@ import pytest
 from pandas.testing import assert_series_equal
 
 from teii.finance import FinanceClientInvalidAPIKey, TimeSeriesFinanceClient
-from teii.finance.exception import FinanceClientInvalidData
+from teii.finance.exception import FinanceClientInvalidData, FinanceClientParamError
 
 
 def test_constructor_success(api_key_str,
@@ -64,18 +64,43 @@ def test_weekly_price_dates(api_key_str,
 def test_weekly_volume_invalid_dates(api_key_str,
                                      mocked_requests):
     # TODO
+    # comprobar que from_date <= to_date y que se generar excepción 'FinanceClientParamError' en caso de error
+    fc = TimeSeriesFinanceClient("IBM", api_key_str)
+    with pytest.raises(FinanceClientParamError):
+        fc.weekly_volume(dt.date(year=2023, month=12, day=31), dt.date(year=2021, month=1, day=1))
     pass
 
 
 def test_weekly_volume_no_dates(api_key_str,
-                                mocked_requests):
-    # TODO
+                                mocked_requests,
+                                pandas_series_IBM_volumes):
+
+    fc = TimeSeriesFinanceClient("IBM", api_key_str)
+
+    ps = fc.weekly_volume()
+
+    assert ps.count() == 1276   # 2009-11-12 to 2024-04-15 (1276 business weeks)
+
+    assert ps.count() == pandas_series_IBM_volumes.count()
+
+    assert_series_equal(ps, pandas_series_IBM_volumes)
+
     pass
 
 
 def test_weekly_volume_dates(api_key_str,
-                             mocked_requests):
-    # TODO
+                             mocked_requests,
+                             pandas_series_IBM_volumes_filtered):
+    fc = TimeSeriesFinanceClient("IBM", api_key_str)
+
+    ps = fc.weekly_volume(dt.date(year=2010, month=1, day=8), dt.date(year=2023, month=12, day=29))
+
+    assert ps.count() == 730    # 2010-01-08 to 2023-12-29 (730 business weeks)
+
+    assert ps.count() == pandas_series_IBM_volumes_filtered.count()
+
+    assert_series_equal(ps, pandas_series_IBM_volumes_filtered)
+
     pass
 
 
