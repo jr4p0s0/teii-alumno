@@ -1,6 +1,7 @@
 """ Unit tests for teii.finance.timeseries module """
 
 
+from teii.finance import FinanceClientAPIError, TimeSeriesFinanceClient
 import datetime as dt
 
 import pytest
@@ -8,6 +9,7 @@ from pandas.testing import assert_series_equal
 
 from teii.finance import FinanceClientInvalidAPIKey, TimeSeriesFinanceClient
 from teii.finance.exception import FinanceClientInvalidData
+import requests
 
 
 def test_constructor_success(api_key_str,
@@ -83,3 +85,12 @@ def test_constructor_invalid_data(api_key_str,
                                   mocked_requests):
     with pytest.raises(FinanceClientInvalidData):
         TimeSeriesFinanceClient("NODATA", api_key_str)
+
+
+def test_constructor_unsuccessful_request(api_key_str, monkeypatch):
+    def mocked_get(url):
+        raise requests.exceptions.ConnectionError("Error conexion")
+
+    monkeypatch.setattr("requests.get", mocked_get)
+    with pytest.raises(FinanceClientAPIError):
+        TimeSeriesFinanceClient("IBM", api_key_str)
