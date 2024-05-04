@@ -29,8 +29,9 @@ def test_constructor_failure_invalid_api_key():
 
 def test_weekly_price_invalid_dates(api_key_str,
                                     mocked_requests):
-    # TODO
-    pass
+    cli = TimeSeriesFinanceClient("IBM", api_key_str)
+    with pytest.raises(FinanceClientParamError):
+        cli.weekly_price(from_date=dt.date(2024, 6, 1), to_date=dt.date(2024, 5, 1))
 
 
 def test_weekly_price_no_dates(api_key_str,
@@ -147,7 +148,7 @@ def test_highest_weekly_variation_dates2(api_key_str,
 
 def test_constructor_unsuccessful_request(api_key_str):
 
-    with patch('requests.get') as mock_get:  # Uso el decorador de mock para reemplazar la funcion request.get por un objeto mock que llamo mock_get
+    with patch('requests.get') as mock_get:  # Uso decorador de mock para reemp. funcion r.g por objeto mock llamado m.g
         # Cuando llame al mock_get, saltara una expcepcion Connectionerror
         mock_get.side_effect = requests.exceptions.ConnectionError
 
