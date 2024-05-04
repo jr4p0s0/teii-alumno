@@ -2,12 +2,12 @@
 
 
 import datetime as dt
-
+import requests
 import pytest
 from pandas.testing import assert_series_equal
 
 from teii.finance import FinanceClientInvalidAPIKey, TimeSeriesFinanceClient
-from teii.finance.exception import FinanceClientInvalidData, FinanceClientParamError
+from teii.finance.exception import FinanceClientInvalidData, FinanceClientParamError, FinanceClientAPIError
 
 
 def test_constructor_success(api_key_str,
@@ -142,3 +142,12 @@ def test_highest_weekly_variation_dates2(api_key_str,
     assert tuple_ == (dt.date.fromisoformat('2020-03-13'), 124.88, 100.81, 24.069999999999993)
 
     pass
+
+
+def test_constructor_unsuccessful_request(api_key_str, monkeypatch):
+    def mocked_get(url):
+        raise requests.exceptions.ConnectionError("Error conexion")
+
+    monkeypatch.setattr("requests.get", mocked_get)
+    with pytest.raises(FinanceClientAPIError):
+        TimeSeriesFinanceClient("IBM", api_key_str)
