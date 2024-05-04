@@ -179,6 +179,10 @@ class TimeSeriesFinanceClient(FinanceClient):
         if from_date is not None and to_date is not None:
             if from_date > to_date:
                 raise FinanceClientParamError("from_date > to_date")
+
         dividendos = dividendos.loc[from_date:to_date]
+
+        dividendos.index = pd.to_datetime(dividendos.index, format='%Y-%m-%d').strftime('%Y')
+        dividendos.index = pd.to_datetime(dividendos.index)
 
         return dividendos
