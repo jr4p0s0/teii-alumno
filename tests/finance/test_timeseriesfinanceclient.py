@@ -6,7 +6,7 @@ import requests
 import pytest
 from pandas.testing import assert_series_equal
 from unittest.mock import patch  # Con esto simulo el request_get
-
+import pandas as pd
 from teii.finance import FinanceClientInvalidAPIKey, TimeSeriesFinanceClient
 from teii.finance.exception import FinanceClientInvalidData, FinanceClientParamError, FinanceClientAPIError
 
@@ -154,3 +154,35 @@ def test_constructor_unsuccessful_request(api_key_str):
 
         with pytest.raises(FinanceClientAPIError):  # captura la expecion
             TimeSeriesFinanceClient("API", api_key_str)
+
+
+def test_dividendos_sinfecha(api_key_str,
+                             mocked_requests):
+    cli = TimeSeriesFinanceClient("IBM", api_key_str)
+    test = cli.yearly_dividends()
+    assert test.count() == 26  # De primeras, deben haber 26 lineas. Si no las hay no sigo comprobando
+
+    datos = pd.read_csv("teii/finance/data/TIME_SERIES_WEEKLY_ADJUSTED.IBM.yearly_dividend.unfiltered.csv")
+
+    # La columna que nos interesa
+    esperados = datos['dividend']
+    esperados.index = test.index
+
+    # Comparamos lo obtenido con lo esperado
+    assert_series_equal(test, esperados)
+
+
+def test_dividendos_confecha(api_key_str,
+                             mocked_requests):
+    cli = TimeSeriesFinanceClient("IBM", api_key_str)
+    test = cli.yearly_dividends(2010, 2023)
+    assert test.count() == 14  # 14 lineas. Si no las hay no sigo comprobando
+
+    datos = pd.read_csv("teii/finance/data/TIME_SERIES_WEEKLY_ADJUSTED.IBM.yearly_dividend.filtered.csv")
+
+    # La columna que nos interesa
+    esperados = datos['dividend']
+    esperados.index = test.index
+
+    # Comparamos lo obtenido con lo esperado
+    assert_series_equal(test, esperados)
