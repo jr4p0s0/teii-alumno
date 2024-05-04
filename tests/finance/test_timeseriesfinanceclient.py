@@ -5,6 +5,7 @@ import datetime as dt
 import requests
 import pytest
 from pandas.testing import assert_series_equal
+from unittest.mock import patch  # Con esto simulo el request_get
 
 from teii.finance import FinanceClientInvalidAPIKey, TimeSeriesFinanceClient
 from teii.finance.exception import FinanceClientInvalidData, FinanceClientParamError, FinanceClientAPIError
@@ -144,10 +145,11 @@ def test_highest_weekly_variation_dates2(api_key_str,
     pass
 
 
-def test_constructor_unsuccessful_request(api_key_str, monkeypatch):
-    def mocked_get(url):
-        raise requests.exceptions.ConnectionError("Error conexion")
+def test_constructor_unsuccessful_request(api_key_str):
 
-    monkeypatch.setattr("requests.get", mocked_get)
-    with pytest.raises(FinanceClientAPIError):
-        TimeSeriesFinanceClient("IBM", api_key_str)
+    with patch('requests.get') as mock_get:  # Uso el decorador de mock para reemplazar la funcion request.get por un objeto mock que llamo mock_get
+        # Cuando llame al mock_get, saltara una expcepcion Connectionerror
+        mock_get.side_effect = requests.exceptions.ConnectionError
+
+        with pytest.raises(FinanceClientAPIError):  # captura la expecion
+            TimeSeriesFinanceClient("API", api_key_str)
