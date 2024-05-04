@@ -86,7 +86,7 @@ class TimeSeriesFinanceClient(FinanceClient):
 
     def weekly_price(self,
                      from_date: Optional[dt.date] = None,
-                     to_date: Optional[dt.date] = None) -> pd.Series:
+                     to_date: Optional[dt.date] = None) -> Optional[pd.Series]:
         """ Return weekly close price from 'from_date' to 'to_date'. """
 
         assert self._data_frame is not None
@@ -99,7 +99,13 @@ class TimeSeriesFinanceClient(FinanceClient):
 
         # FIXME: type hint error
         if from_date is not None and to_date is not None:
-            series = series.loc[from_date:to_date]   # type: ignore
+            if from_date is not None and to_date is not None:
+                try:
+                    assert from_date <= to_date
+                except Exception as e:
+                    raise FinanceClientParamError("from_date tiene que ser menor o igual que to_date") from e
+
+                series = series.loc[from_date:to_date]   # type: ignore
 
         return series
 
