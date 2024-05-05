@@ -16,8 +16,6 @@ jobs:
   # This workflow contains two jobs called "test-package" and "build-and-publish-package"
 
   test-package:
-    # The type of runner that the job will run on
-    # Definimos una estrategia basada en una matriz de combinaciones tanto para sistema operativo como para versiones de python
       strategy:
         matrix:
           sistema_operativo: [ubuntu-22.04, ubuntu-20.04]
