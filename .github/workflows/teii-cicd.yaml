@@ -14,13 +14,13 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains two jobs called "test-package" and "build-and-publish-package"
-
+  
   test-package:
-      strategy:
-        matrix:
-          sistema_operativo: [ubuntu-22.04, ubuntu-20.04]
-          version_python: ["3.8", "3.9", "3.10"]
-      runs-on: ${{matrix.sistema_operativo}}
+    strategy:
+      matrix:
+        sistema_operativo: [ubuntu-22.04, ubuntu-20.04]
+        version_python: ["3.8", "3.9", "3.10"]  
+    runs-on: ${{matrix.sistema_operativo}}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
