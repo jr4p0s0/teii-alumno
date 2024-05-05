@@ -163,26 +163,20 @@ class TimeSeriesFinanceClient(FinanceClient):
                          to_year: Optional[int] = None) -> pd.Series:
 
         assert self._data_frame is not None
-
-        # Convierto los enteros en fechas
-        if from_year is not None and to_year is not None:
-            from_date = dt.date(year=from_year, month=1, day=1)
-            to_date = dt.date(year=to_year, month=12, day=31)
-        else:
-            from_date = None
-            to_date = None
-
         # Obtenemos los dividendos anuales agrupando los datos anualmente "YS"
         dividendos = self._data_frame.groupby(pd.Grouper(freq='YS'))['dividend'].sum()
-
-        # Filtramos los dividendos por rango de años si se especifican
-        if from_date is not None and to_date is not None:
-            if from_date > to_date:
-                raise FinanceClientParamError("from_date > to_date")
-
-        dividendos = dividendos.loc[from_date:to_date]
-
-        dividendos.index = pd.to_datetime(dividendos.index, format='%Y-%m-%d').strftime('%Y')
-        dividendos.index = pd.to_datetime(dividendos.index)
+        # Convierto los enteros en fechas
+        if from_year is not None and to_year is not None:
+            try:
+                from_date = dt.date(year=from_year, month=1, day=1)
+                to_date = dt.date(year=to_year, month=12, day=31)
+                assert from_date <= to_date
+            except Exception as e:
+                raise FinanceClientParamError("Error en parametros") from e
+            else:
+                # Filtramos los dividendos por rango de años si se especifican
+                dividendos = dividendos.loc[from_date:to_date]
+        else:
+            dividendos
 
         return dividendos
