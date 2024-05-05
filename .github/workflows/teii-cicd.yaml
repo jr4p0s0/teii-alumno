@@ -14,7 +14,9 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains two jobs called "test-package" and "build-and-publish-package"
+
   test-package:
+    # The type of runner that the job will run on
     # Definimos una estrategia basada en una matriz de combinaciones tanto para sistema operativo como para versiones de python
       strategy:
         matrix:
@@ -37,7 +39,7 @@ jobs:
     # Installs tox
     - name: Install tox
       run: |
-        pip install tox==4.14.2 tox-wheel
+        pip install tox==4.14.2
 
     # Runs tox
     - name: Run flake8, mypy and pytest with tox
