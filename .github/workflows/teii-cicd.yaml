@@ -42,4 +42,4 @@ jobs:
     # Runs tox
     - name: Run flake8, mypy and pytest with tox
       run: |
-        tox -e py
+        tox -e py${{matrix.version_python}}
