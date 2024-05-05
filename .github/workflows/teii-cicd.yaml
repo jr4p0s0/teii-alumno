@@ -37,9 +37,9 @@ jobs:
     # Installs tox
     - name: Install tox
       run: |
-        pip install tox==4.14.2
+        pip install tox==4.14.2 tox-wheel
 
     # Runs tox
     - name: Run flake8, mypy and pytest with tox
       run: |
-        tox -e py${{matrix.version_python}}
+        tox -e py
