@@ -117,3 +117,9 @@ a partir de la serie de Pandas.
 - [Wikipedia • JSON](https://en.wikipedia.org/wiki/JSON)
 - [Python Documentation • `json` — JSON encoder and decoder](https://docs.python.org/3.8/library/json.html)
 - [Real Python • Working With JSON Data in Python](https://realpython.com/python-json/)
+
+------
+
+Entrega Final 21/05/2024
+
+Jaime Raposo & Juan de Dios Hernández
